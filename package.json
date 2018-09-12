@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "description": "bigint to buffer conversion with native support",
   "main": "build/src/node.js",
-  "browser" : {
-    "build/src/node.js" : "build/src/browser.js"
+  "browser": {
+    "build/src/node.js": "build/src/browser.js"
   },
   "types": "build/src/index.d.js",
   "scripts": {
@@ -14,7 +14,7 @@
     "lint": "gts check",
     "install": "npm run rebuild || echo \"Couldn't build bindings. Non-native version used.\"",
     "prepare": "npm run compile",
-    "prepublishOnly" : "rm -rf build/Release; rm build/Makefile; rm build/gyp-*; rm build/*.mk; rm build/*.Makefile",
+    "prepublishOnly": "rm -rf build/Release; rm build/Makefile; rm build/gyp-*; rm build/*.mk; rm build/*.Makefile",
     "test:browser": "karma start karma.conf.js",
     "test:node": "mocha -r ts-node/register src/**/*.spec.ts --timeout 40000",
     "benchmark": "node -r ts-node/register src/index.bench.ts",
@@ -54,9 +54,7 @@
     "istanbul": "^0.4.1",
     "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-detect-browsers": "^2.3.2",
     "karma-env-preprocessor": "^0.1.1",
-    "karma-firefox-launcher": "^1.1.0",
     "karma-mocha": "^1.3.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-webpack": "^3.0.0",
