@@ -2,11 +2,11 @@
   "name": "bigint-buffer",
   "version": "0.1.1",
   "description": "bigint to buffer conversion with native support",
-  "main": "build/src/node.js",
+  "main": "dist/node.js",
   "browser": {
-    "build/src/node.js": "build/src/browser.js"
+    "dist/node.js": "dist/browser.js"
   },
-  "types": "build/src/index.d.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "npm run test:node && npm run test:browser",
     "coverage": "istanbul cover ./test/index.js",
@@ -14,7 +14,7 @@
     "lint": "gts check",
     "install": "npm run rebuild || echo \"Couldn't build bindings. Non-native version used.\"",
     "prepare": "npm run compile",
-    "prepublishOnly": "rm -rf build/Release; rm build/Makefile; rm build/gyp-*; rm build/*.mk; rm build/*.Makefile",
+    "prepublishOnly": "rm -rf build/Release; rm build/Makefile; rm build/gyp-*; rm build/*.mk; rm build/*.Makefile; rm *.tgz",
     "test:browser": "karma start karma.conf.js",
     "test:node": "mocha -r ts-node/register src/**/*.spec.ts --timeout 40000",
     "benchmark": "node -r ts-node/register src/index.bench.ts",
@@ -22,7 +22,7 @@
     "rebuild": "node-gyp rebuild",
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "mkdir -p dist; tsc -p .;rollup -c > dist/node.js && BROWSER=true rollup -c > dist/browser.js",
+    "compile": "mkdir -p dist; tsc -p .;rollup -c > dist/node.js && BROWSER=true rollup -c > dist/browser.js; cp build/src/*.d.ts dist",
     "fix": "gts fix",
     "pretest": "npm run compile",
     "posttest": "npm run check"
