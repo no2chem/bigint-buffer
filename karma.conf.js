@@ -46,16 +46,7 @@ module.exports = function (config) {
     mime: {
       'text/x-typescript': ['ts','tsx']
     },
-    detectBrowsers: {
-      enabled: true,
-      usePhantomJS: false,
-      postDetection: function (availableBrowser) {
-        var browsers = ['Chrome', 'Firefox']
-        return browsers.filter(function (browser) {
-          return availableBrowser.indexOf(browser) !== -1
-        })
-      }
-    },
+    browsers: ['Chrome'],
     customLaunchers: {
       Chrome_travis_ci: {
         base: 'Chrome',
