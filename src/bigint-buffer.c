@@ -46,14 +46,13 @@ napi_value toBigInt (napi_env env, napi_callback_info info) {
   bool not_64_aligned = len & 7;
   bool fits_in_stack = len <= BUFFER_STACK_SIZE;
   size_t overflow_len = (8 - (len & 7));
+  // Buffer is managed by VM, so copy it out (TODO: perhaps we can increase refcount?)
   size_t aligned_len = len + overflow_len;
-  if (not_64_aligned) {
-      uint8_t copy[BUFFER_STACK_SIZE];
-      uint8_t* bufTemp = fits_in_stack ? copy : malloc(aligned_len);
-      memset(bufTemp + len, 0, overflow_len);
-      memcpy(bufTemp, buffer, len);
-      buffer = bufTemp;
-  }
+  uint8_t copy[BUFFER_STACK_SIZE];
+  uint8_t* bufTemp = fits_in_stack ? copy : malloc(aligned_len);
+  memset(bufTemp + len, 0, overflow_len);
+  memcpy(bufTemp, buffer, len);
+  buffer = bufTemp;
 
   napi_value out;
   size_t len_in_words = (len >> 3) // Right Shift 3 === Divide by 8
@@ -89,7 +88,7 @@ napi_value toBigInt (napi_env env, napi_callback_info info) {
   status = napi_create_bigint_words(env, 0, len_in_words, (uint64_t*) buffer , &out);
   assert(status == napi_ok);
 
-  if (not_64_aligned && !fits_in_stack) {
+  if (!fits_in_stack) {
       free(buffer);
   }
 
