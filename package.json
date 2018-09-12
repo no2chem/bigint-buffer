@@ -69,6 +69,9 @@
     "typescript": "calebsander/TypeScript#feature/bigint-lkg",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0"
+  }, 
+  "engines": {
+    "node": ">= 0.10.0"
   },
   "publishConfig": {
     "access": "public"
