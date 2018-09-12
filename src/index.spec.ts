@@ -4,9 +4,8 @@ declare var process: {browser: boolean;};
 import * as chai from 'chai';
 import * as path from 'path';
 
-const lib = process.browser ?
-    require('./browser') :
-    require(path.join(__dirname, '../build/src/node'));
+const lib = process.browser ? require('../../dist/browser') :
+                              require(path.join(__dirname, '../dist/node'));
 const BEToBigInt = lib.BEToBigInt;
 const LEToBigInt = lib.LEToBigInt;
 const ToBEBuffer = lib.ToBEBuffer;

@@ -1,6 +1,6 @@
 {
   "name": "bigint-buffer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "bigint to buffer conversion with native support",
   "main": "build/src/node.js",
   "browser": {
@@ -22,7 +22,7 @@
     "rebuild": "node-gyp rebuild",
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "mkdir -p build/src; tsc -p .;rollup -c > build/src/node.js && BROWSER=true rollup -c > build/src/browser.js",
+    "compile": "mkdir -p dist; tsc -p .;rollup -c > dist/node.js && BROWSER=true rollup -c > dist/browser.js",
     "fix": "gts fix",
     "pretest": "npm run compile",
     "posttest": "npm run check"
