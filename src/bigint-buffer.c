@@ -71,14 +71,15 @@ napi_value toBigInt (napi_env env, napi_callback_info info) {
         uint64_t temp;
         size_t last_word = len_in_words - 1;
         size_t end_ptr = last_word;
-        for (uint32_t offset = 0; offset < len_in_words / 2; offset++) {
+        int32_t offset;
+        for (offset = 0; offset < (int32_t)(len_in_words / 2); offset++) {
             temp = buffer64[offset];
             buffer64[offset] = buffer64[end_ptr];
             buffer64[end_ptr] = temp;
             end_ptr--;
         } 
         uint64_t prev_overflow = 0;
-        for (int32_t offset = last_word; offset >= 0; offset--) {
+        for (offset = last_word; offset >= 0; offset--) {
             uint64_t as_little_endian = __builtin_bswap64(buffer64[offset]);
             uint64_t overflow = as_little_endian & BIT_MASK(uint64_t, overflow_in_bits); //top?
             buffer64[offset] = (as_little_endian >> overflow_in_bits) | prev_overflow;
@@ -161,8 +162,8 @@ napi_value fromBigInt (napi_env env, napi_callback_info info) {
         size_t conv_words = original_word_width;
         size_t last_word = conv_words - 1;
         size_t end_ptr = last_word;
-        
-        for (uint32_t offset = 0; offset < conv_words / 2; offset++) {
+        int32_t offset;
+        for (offset = 0; offset < (int32_t)(conv_words / 2); offset++) {
             temp = __builtin_bswap64(conv_buffer[offset]);
             conv_buffer[offset] = __builtin_bswap64(conv_buffer[end_ptr]);
             conv_buffer[end_ptr] = temp;
