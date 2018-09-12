@@ -12,7 +12,8 @@ if (!process.browser) {
   try {
     converter = require('bindings')('bigint_buffer');
   } catch (e) {
-    console.warn('bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)');
+    console.warn(
+        'bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)');
   }
 }
 
