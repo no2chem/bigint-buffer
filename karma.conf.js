@@ -2,7 +2,7 @@ const webpack = require('webpack')
 module.exports = function (config) {
    const configuration = {
     browserNoActivityTimeout: 120000,
-    frameworks: ['mocha', 'detectBrowsers'],
+    frameworks: ['mocha'],
     files: [
       './build/src/*.spec.js'
     ],
@@ -37,8 +37,6 @@ module.exports = function (config) {
     plugins: [
       'karma-chrome-launcher',
       'karma-env-preprocessor',
-      'karma-firefox-launcher',
-      'karma-detect-browsers',
       'karma-webpack',
       'karma-mocha',
       'karma-mocha-reporter'
