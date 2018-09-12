@@ -7,9 +7,7 @@
 #include <assert.h>
 #include <limits.h> 
 
-#define BIT_MASK(__TYPE__, __ONE_COUNT__) \
-    ((__TYPE__) (-((__ONE_COUNT__) != 0))) \
-    & (((__TYPE__) -1) >> ((sizeof(__TYPE__) * CHAR_BIT) - (__ONE_COUNT__)))
+#define BIT_MASK(n) (~( ((~0ull) << ((n)-1)) << 1 ))
 
 // The maximum size we'll store on the stack. If we need a larger temporary
 // buffer malloc will be called.
@@ -81,7 +79,7 @@ napi_value toBigInt (napi_env env, napi_callback_info info) {
         uint64_t prev_overflow = 0;
         for (offset = last_word; offset >= 0; offset--) {
             uint64_t as_little_endian = __builtin_bswap64(buffer64[offset]);
-            uint64_t overflow = as_little_endian & BIT_MASK(uint64_t, overflow_in_bits); //top?
+            uint64_t overflow = as_little_endian & BIT_MASK(overflow_in_bits); //top?
             buffer64[offset] = (as_little_endian >> overflow_in_bits) | prev_overflow;
             prev_overflow = overflow << (64 - overflow_in_bits);
         }
