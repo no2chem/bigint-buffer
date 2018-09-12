@@ -50,11 +50,7 @@ module.exports = function (config) {
       enabled: true,
       usePhantomJS: false,
       postDetection: function (availableBrowser) {
-        if (process.env.TRAVIS) {
-          return ['Firefox']
-        }
-
-        var browsers = ['Chrome', 'Firefox']
+        var browsers = ['Chrome']
         return browsers.filter(function (browser) {
           return availableBrowser.indexOf(browser) !== -1
         })
