@@ -9,7 +9,7 @@ env:
   matrix:
   - CXX=g++-4.8 TEST_SUITE=test:node
 addons:
-  chrome: beta
+  chrome: stable
   apt:
     sources:
     - ubuntu-toolchain-r-test
