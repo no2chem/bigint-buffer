@@ -26,7 +26,11 @@ export function LEToBigInt(buf: Buffer): BigInt {
   if (process.browser || converter === undefined) {
     const reversed = Buffer.from(buf);
     reversed.reverse();
-    return BigInt(`0x${reversed.toString('hex')}`);
+    const hex = reversed.toString('hex');
+    if (hex.length === 0) {
+      return BigInt(0);
+    }
+    return BigInt(`0x${hex}`);
   }
   return converter.toBigInt(buf, false);
 }
@@ -38,7 +42,11 @@ export function LEToBigInt(buf: Buffer): BigInt {
  */
 export function BEToBigInt(buf: Buffer): BigInt {
   if (process.browser || converter === undefined) {
-    return BigInt(`0x${buf.toString('hex')}`);
+    const hex = buf.toString('hex');
+    if (hex.length === 0) {
+      return BigInt(0);
+    }
+    return BigInt(`0x${hex}`);
   }
   return converter.toBigInt(buf, true);
 }
