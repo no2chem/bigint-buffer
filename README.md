@@ -50,11 +50,11 @@ bigint-buffer introduces four functions for conversion between buffers and bigin
 import {BEToBigInt, LEToBigInt, ToBEBuffer, ToLEBuffer} from 'bigint-buffer';
 
 // Get a big endian buffer of the given width
-ToBEBuffer(deadbeefn, 8);
+ToBEBuffer(0xdeadbeefn, 8);
 // > <Buffer 00 00 00 00 de ad be ef>
 
 // Get a little endian buffer of the given width
-ToLEBuffer(deadbeefn, 8);
+ToLEBuffer(0xdeadbeefn, 8);
 // > <Buffer ef be ad de 00 00 00 00>
 
 // Get a BigInt from a buffer in big endian format
