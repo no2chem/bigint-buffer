@@ -86,11 +86,11 @@ SyntaxError: Cannot <span class="hljs-built_in">convert</span>  <span class="hlj
 				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {BEToBigInt, LEToBigInt, ToBEBuffer, ToLEBuffer} <span class="hljs-keyword">from</span> <span class="hljs-string">'bigint-buffer'</span>;
 
 <span class="hljs-comment">// Get a big endian buffer of the given width</span>
-ToBEBuffer(deadbeefn, <span class="hljs-number">8</span>);
+ToBEBuffer(<span class="hljs-number">0xdeadbeef</span>n, <span class="hljs-number">8</span>);
 <span class="hljs-comment">// &gt; &lt;Buffer 00 00 00 00 de ad be ef&gt;</span>
 
 <span class="hljs-comment">// Get a little endian buffer of the given width</span>
-ToLEBuffer(deadbeefn, <span class="hljs-number">8</span>);
+ToLEBuffer(<span class="hljs-number">0xdeadbeef</span>n, <span class="hljs-number">8</span>);
 <span class="hljs-comment">// &gt; &lt;Buffer ef be ad de 00 00 00 00&gt;</span>
 
 <span class="hljs-comment">// Get a BigInt from a buffer in big endian format</span>
