@@ -22,7 +22,7 @@ if (!process.browser) {
  * @param buf The little-endian buffer to convert
  * @returns A BigInt with the little-endian representation of buf.
  */
-export function LEToBigInt(buf: Buffer): BigInt {
+export function toBigIntLE(buf: Buffer): BigInt {
   if (process.browser || converter === undefined) {
     const reversed = Buffer.from(buf);
     reversed.reverse();
@@ -40,7 +40,7 @@ export function LEToBigInt(buf: Buffer): BigInt {
  * @param buf The big-endian buffer to convert.
  * @returns A BigInt with the big-endian representation of buf.
  */
-export function BEToBigInt(buf: Buffer): BigInt {
+export function toBigIntBE(buf: Buffer): BigInt {
   if (process.browser || converter === undefined) {
     const hex = buf.toString('hex');
     if (hex.length === 0) {
@@ -57,7 +57,7 @@ export function BEToBigInt(buf: Buffer): BigInt {
  * @param width The number of bytes that the resulting buffer should be.
  * @returns A little-endian buffer representation of num.
  */
-export function ToLEBuffer(num: BigInt, width: number): Buffer {
+export function toBufferLE(num: BigInt, width: number): Buffer {
   if (process.browser || converter === undefined) {
     const hex = num.toString(16);
     const buffer =
@@ -75,7 +75,7 @@ export function ToLEBuffer(num: BigInt, width: number): Buffer {
  * @param width The number of bytes that the resulting buffer should be.
  * @returns A big-endian buffer representation of num.
  */
-export function ToBEBuffer(num: BigInt, width: number): Buffer {
+export function toBufferBE(num: BigInt, width: number): Buffer {
   if (process.browser || converter === undefined) {
     const hex = num.toString(16);
     return Buffer.from(hex.padStart(width * 2, '0').slice(0, width * 2), 'hex');

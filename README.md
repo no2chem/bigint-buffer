@@ -47,22 +47,23 @@ bigint from hex string from buffer (huge): 1230607±1.02% ops/s 812.61±40.013 n
 
 bigint-buffer introduces four functions for conversion between buffers and bigints. A small example follows:
 ```typescript
-import {BEToBigInt, LEToBigInt, ToBEBuffer, ToLEBuffer} from 'bigint-buffer';
+import {toBigIntBE, toBigIntLE, toBufferBE, toBufferLE} from 'bigint-buffer';
 
 // Get a big endian buffer of the given width
-ToBEBuffer(0xdeadbeefn, 8);
-// > <Buffer 00 00 00 00 de ad be ef>
+toBufferBE(0xdeadbeefn, 8);
+// ↪ <Buffer 00 00 00 00 de ad be ef>
 
 // Get a little endian buffer of the given width
-ToLEBuffer(0xdeadbeefn, 8);
-// > <Buffer ef be ad de 00 00 00 00>
+toBufferLE(0xdeadbeefn, 8);
+// ↪ <Buffer ef be ad de 00 00 00 00>
 
 // Get a BigInt from a buffer in big endian format
-BEToBigInt(Buffer.from('deadbeef', 'hex'));
-// > 3735928559n (0xdeadbeefn)
+toBigIntBE(Buffer.from('deadbeef', 'hex'));
+// ↪ 3735928559n (0xdeadbeefn)
 
 // Get a BigInt from a buffer in little endian format
-LEToBigInt(Buffer.from('deadbeef', 'hex'));
+toBigIntLE(Buffer.from('deadbeef', 'hex'));
+// ↪ 4022250974n (0xefbeadd0en)
 ```
 
 bigint-buffer uses N-API native bindings to perform the conversion efficiently without generating the
@@ -96,7 +97,8 @@ Add bigint-buffer to your project with:
 
 # Documentation
 
-Basic API documentation can be found [here](https://no2chem.github.io/bigint-buffer/).
+Basic API documentation can be found [here](https://no2chem.github.io/bigint-buffer/). Note that v1.0.0 changes
+the name of the original functions to meet style guidelines.
 
 # Benchmarks
 

@@ -1,6 +1,6 @@
 {
   "name": "bigint-buffer",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "description": "bigint to buffer conversion with native support",
   "main": "dist/node.js",
   "browser": {
