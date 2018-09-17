@@ -1,7 +1,7 @@
 
 import * as benchmark from 'benchmark';
 
-import {BEToBigInt, LEToBigInt, ToBEBuffer, ToLEBuffer} from './index';
+import {toBigIntBE, toBigIntLE, toBufferBE, toBufferLE} from './index';
 
 
 // This file contains the benchmark test suite. It includes the benchmark and
@@ -29,10 +29,10 @@ suite.add('bigint from hex string from buffer (small)', () => {
   BigInt(`0x${smallBuf.toString('hex')}`);
 });
 suite.add('LE bigint-buffer ToBigInt (small)', () => {
-  LEToBigInt(smallBuf);
+  toBigIntLE(smallBuf);
 });
 suite.add('BE bigint-buffer ToBigInt (small)', () => {
-  BEToBigInt(smallBuf);
+  toBigIntBE(smallBuf);
 });
 
 // Test mid strings (aligned)
@@ -46,10 +46,10 @@ suite.add('bigint from hex string from buffer (mid, aligned)', () => {
   BigInt(`0x${midBuf.toString('hex')}`);
 });
 suite.add('LE bigint-buffer ToBigInt (mid, aligned)', () => {
-  LEToBigInt(midBuf);
+  toBigIntLE(midBuf);
 });
 suite.add('BE bigint-buffer ToBigInt (mid, aligned)', () => {
-  BEToBigInt(midBuf);
+  toBigIntBE(midBuf);
 });
 
 // Test huge strings
@@ -64,10 +64,10 @@ suite.add('bigint from hex string from buffer (huge)', () => {
   BigInt(`0x${hugeBuf.toString('hex')}`);
 });
 suite.add('LE bigint-buffer ToBigInt (huge)', () => {
-  LEToBigInt(hugeBuf);
+  toBigIntLE(hugeBuf);
 });
 suite.add('BE bigint-buffer ToBigInt (huge)', () => {
-  BEToBigInt(hugeBuf);
+  toBigIntBE(hugeBuf);
 });
 
 const bigIntToBufferWithStringBE = (int: bigint, width: number): Buffer => {
@@ -94,11 +94,11 @@ suite.add('BE bigint to hex string to buffer (small)', () => {
 });
 
 suite.add('LE bigint-buffer to buffer (small)', () => {
-  ToLEBuffer(smallValue, 8);
+  toBufferLE(smallValue, 8);
 });
 
 suite.add('BE bigint-buffer to buffer (small)', () => {
-  ToBEBuffer(smallValue, 8);
+  toBufferBE(smallValue, 8);
 });
 
 // Test large toBuffer
@@ -113,11 +113,11 @@ suite.add('BE bigint to hex string to buffer (large)', () => {
 });
 
 suite.add('LE bigint-buffer to buffer (large)', () => {
-  ToLEBuffer(largeValue, 24);
+  toBufferLE(largeValue, 24);
 });
 
 suite.add('BE bigint-buffer to buffer (large)', () => {
-  ToBEBuffer(largeValue, 24);
+  toBufferBE(largeValue, 24);
 });
 
 suite.add('LE bigint to hex string to buffer (large)', () => {
@@ -129,11 +129,11 @@ suite.add('BE bigint to hex string to buffer (large)', () => {
 });
 
 suite.add('LE bigint-buffer to buffer (large, truncated)', () => {
-  ToLEBuffer(largeValue, 8);
+  toBufferLE(largeValue, 8);
 });
 
 suite.add('BE bigint-buffer to buffer (large, truncated)', () => {
-  ToBEBuffer(largeValue, 8);
+  toBufferBE(largeValue, 8);
 });
 
 const b1 = Buffer.from('0123456789ABCDEF0123456789ABCDEF', 'hex');
