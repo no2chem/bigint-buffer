@@ -83,22 +83,23 @@ SyntaxError: Cannot <span class="hljs-built_in">convert</span>  <span class="hlj
 <span class="hljs-number">1</span>n</code></pre><p>These conversions are not only quite expensive, but obviate a lot of the performance gains we get from BigInts. For example, on a large buffer, this conversion can take over 100x the time to do a comparison:</p>
 				<pre><code>bigint <span class="hljs-keyword">from</span> hex <span class="hljs-built_in">string</span> <span class="hljs-keyword">from</span> buffer (huge): <span class="hljs-number">1230607</span>±<span class="hljs-number">1.02</span>% ops/s <span class="hljs-number">812.61</span>±<span class="hljs-number">40.013</span> ns/op (<span class="hljs-number">89</span> runs)</code></pre><h1 id="and-bigint-buffer-helps-how-">And... bigint-buffer helps how?</h1>
 				<p>bigint-buffer introduces four functions for conversion between buffers and bigints. A small example follows:</p>
-				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {BEToBigInt, LEToBigInt, ToBEBuffer, ToLEBuffer} <span class="hljs-keyword">from</span> <span class="hljs-string">'bigint-buffer'</span>;
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> {toBigIntBE, toBigIntLE, toBufferBE, toBufferLE} <span class="hljs-keyword">from</span> <span class="hljs-string">'bigint-buffer'</span>;
 
 <span class="hljs-comment">// Get a big endian buffer of the given width</span>
-ToBEBuffer(<span class="hljs-number">0xdeadbeef</span>n, <span class="hljs-number">8</span>);
-<span class="hljs-comment">// &gt; &lt;Buffer 00 00 00 00 de ad be ef&gt;</span>
+toBufferBE(<span class="hljs-number">0xdeadbeef</span>n, <span class="hljs-number">8</span>);
+<span class="hljs-comment">// ↪ &lt;Buffer 00 00 00 00 de ad be ef&gt;</span>
 
 <span class="hljs-comment">// Get a little endian buffer of the given width</span>
-ToLEBuffer(<span class="hljs-number">0xdeadbeef</span>n, <span class="hljs-number">8</span>);
-<span class="hljs-comment">// &gt; &lt;Buffer ef be ad de 00 00 00 00&gt;</span>
+toBufferLE(<span class="hljs-number">0xdeadbeef</span>n, <span class="hljs-number">8</span>);
+<span class="hljs-comment">// ↪ &lt;Buffer ef be ad de 00 00 00 00&gt;</span>
 
 <span class="hljs-comment">// Get a BigInt from a buffer in big endian format</span>
-BEToBigInt(Buffer.from(<span class="hljs-string">'deadbeef'</span>, <span class="hljs-string">'hex'</span>));
-<span class="hljs-comment">// &gt; 3735928559n (0xdeadbeefn)</span>
+toBigIntBE(Buffer.from(<span class="hljs-string">'deadbeef'</span>, <span class="hljs-string">'hex'</span>));
+<span class="hljs-comment">// ↪ 3735928559n (0xdeadbeefn)</span>
 
 <span class="hljs-comment">// Get a BigInt from a buffer in little endian format</span>
-LEToBigInt(Buffer.from(<span class="hljs-string">'deadbeef'</span>, <span class="hljs-string">'hex'</span>));</code></pre>
+toBigIntLE(Buffer.from(<span class="hljs-string">'deadbeef'</span>, <span class="hljs-string">'hex'</span>));
+<span class="hljs-comment">// ↪ 4022250974n (0xefbeadd0en)</span></code></pre>
 				<p>bigint-buffer uses N-API native bindings to perform the conversion efficiently without generating the
 					immediate hex strings necessary in pure javascript. This results in a significant performance increase,
 				about 2x for small buffer to bigint conversions:</p>
@@ -116,7 +117,8 @@ LE bigint-<span class="hljs-keyword">buffer</span> <span class="hljs-keyword">to
 					<p><code>npm install bigint-buffer</code></p>
 				</blockquote>
 				<h1 id="documentation">Documentation</h1>
-				<p>Basic API documentation can be found <a href="https://no2chem.github.io/bigint-buffer/">here</a>.</p>
+				<p>Basic API documentation can be found <a href="https://no2chem.github.io/bigint-buffer/">here</a>. Note that v1.0.0 changes
+				the name of the original functions to meet style guidelines.</p>
 				<h1 id="benchmarks">Benchmarks</h1>
 				<p>Benchmarks can be run by executing <code>npm run benchmark</code> from the package directory.</p>
 			</div>
@@ -132,16 +134,16 @@ LE bigint-<span class="hljs-keyword">buffer</span> <span class="hljs-keyword">to
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
 					<li class=" tsd-kind-function">
-						<a href="globals.html#betobigint" class="tsd-kind-icon">BETo<wbr>Big<wbr>Int</a>
+						<a href="globals.html#tobigintbe" class="tsd-kind-icon">to<wbr>Big<wbr>IntBE</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#letobigint" class="tsd-kind-icon">LETo<wbr>Big<wbr>Int</a>
+						<a href="globals.html#tobigintle" class="tsd-kind-icon">to<wbr>Big<wbr>IntLE</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#tobebuffer" class="tsd-kind-icon">ToBEBuffer</a>
+						<a href="globals.html#tobufferbe" class="tsd-kind-icon">to<wbr>BufferBE</a>
 					</li>
 					<li class=" tsd-kind-function">
-						<a href="globals.html#tolebuffer" class="tsd-kind-icon">ToLEBuffer</a>
+						<a href="globals.html#tobufferle" class="tsd-kind-icon">to<wbr>BufferLE</a>
 					</li>
 				</ul>
 			</nav>
