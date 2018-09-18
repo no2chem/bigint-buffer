@@ -43,53 +43,53 @@ napi_value toBigInt (napi_env env, napi_callback_info info) {
   assert(status == napi_ok);
 
   // If len is not divisible by 8 bytes, we'll need to copy
-  bool not_64_aligned = len & 7;
-  bool fits_in_stack = len <= BUFFER_STACK_SIZE;
-  size_t overflow_len = (8 - (len & 7));
+  bool not_64_aligned = (len & 7) != 0;
+  size_t overflow_len = not_64_aligned ? 8 - (len & 0x7) : 0;
   // Buffer is managed by VM, so copy it out (TODO: perhaps we can increase refcount?)
   size_t aligned_len = len + overflow_len;
+  size_t len_in_words = not_64_aligned ? (len >> 3) + 1 : (len >> 3);
+  bool fits_in_stack = aligned_len <= BUFFER_STACK_SIZE;
+
   uint8_t copy[BUFFER_STACK_SIZE];
   uint8_t* bufTemp = fits_in_stack ? copy : malloc(aligned_len);
-  memset(bufTemp + len, 0, overflow_len);
+  if (overflow_len > 0) {
+    memset(bufTemp + len, 0, overflow_len);
+  }
   memcpy(bufTemp, buffer, len);
-  buffer = bufTemp;
+  uint64_t* as_64_aligned = (uint64_t*) bufTemp;
+  size_t overflow_in_bits = overflow_len << 3; // == overflow_len * 8
 
   napi_value out;
-  size_t len_in_words = (len >> 3) // Right Shift 3 === Divide by 8
-  + ((len & 7) ? 1 : 0); // len & 7 === len % 8 === 0?
-
   // swap
   if (big_endian) {
-    uint64_t* buffer64 = (uint64_t*) buffer;
-    size_t overflow_in_bits = overflow_len << 3; // == overflow_len * 8
     if (len_in_words == 1) {
-        buffer64[0] = not_64_aligned ? __builtin_bswap64(buffer64[0]) >> overflow_in_bits :  __builtin_bswap64(buffer64[0]);
+        as_64_aligned[0] = not_64_aligned ? __builtin_bswap64(as_64_aligned[0]) >> overflow_in_bits :  __builtin_bswap64(as_64_aligned[0]);
     } else {
         uint64_t temp;
         size_t last_word = len_in_words - 1;
         size_t end_ptr = last_word;
         int32_t offset;
         for (offset = 0; offset < (int32_t)(len_in_words / 2); offset++) {
-            temp = buffer64[offset];
-            buffer64[offset] = buffer64[end_ptr];
-            buffer64[end_ptr] = temp;
+            temp = as_64_aligned[offset];
+            as_64_aligned[offset] = as_64_aligned[end_ptr];
+            as_64_aligned[end_ptr] = temp;
             end_ptr--;
         } 
         uint64_t prev_overflow = 0;
         for (offset = last_word; offset >= 0; offset--) {
-            uint64_t as_little_endian = __builtin_bswap64(buffer64[offset]);
-            uint64_t overflow = as_little_endian & BIT_MASK(overflow_in_bits); //top?
-            buffer64[offset] = (as_little_endian >> overflow_in_bits) | prev_overflow;
+            uint64_t as_little_endian = __builtin_bswap64(as_64_aligned[offset]);
+            uint64_t overflow = as_little_endian & BIT_MASK(overflow_in_bits);
+            as_64_aligned[offset] = not_64_aligned ? (as_little_endian >> overflow_in_bits) | prev_overflow : as_little_endian;
             prev_overflow = overflow << (64 - overflow_in_bits);
         }
     }
   }
 
-  status = napi_create_bigint_words(env, 0, len_in_words, (uint64_t*) buffer , &out);
+  status = napi_create_bigint_words(env, 0, len_in_words, as_64_aligned , &out);
   assert(status == napi_ok);
 
   if (!fits_in_stack) {
-      free(buffer);
+      free(bufTemp);
   }
 
   return out;

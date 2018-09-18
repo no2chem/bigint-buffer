@@ -1,6 +1,6 @@
 {
   "name": "bigint-buffer",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "bigint to buffer conversion with native support",
   "main": "dist/node.js",
   "browser": {
@@ -52,7 +52,7 @@
     "benchmark": "^2.1.4",
     "chai": "^4.1.2",
     "coveralls": "^3.0.2",
-    "gts": "^0.5.4",
+    "gts": "^0.8.0",
     "istanbul": "^0.4.1",
     "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.2.0",
@@ -73,7 +73,7 @@
     "webpack-cli": "^3.1.0"
   },
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 10.0.0"
   },
   "publishConfig": {
     "access": "public"
