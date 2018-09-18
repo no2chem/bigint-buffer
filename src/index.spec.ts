@@ -74,6 +74,26 @@ describe('Try buffer conversion (little endian)', () => {
            ])),
            BigInt(`0xbadc0ffee0ddf00ddeadbeef`));
      });
+  it('0xbadc0ffee0ddf00ddeadbeefbadc0ffee0ddf00ddeadbeef should equal 0xbadc0ffee0ddf00ddeadbeefbadc0ffee0ddf00ddeadbeefn',
+     async () => {
+       assertEquals(
+           toBigIntLE(Buffer.from([
+             0xef, 0xbe, 0xad, 0xde, 0x0d, 0xf0, 0xdd, 0xe0,
+             0xfe, 0x0f, 0xdc, 0xba, 0xef, 0xbe, 0xad, 0xde,
+             0x0d, 0xf0, 0xdd, 0xe0, 0xfe, 0x0f, 0xdc, 0xba
+           ])),
+           BigInt(`0xbadc0ffee0ddf00ddeadbeefbadc0ffee0ddf00ddeadbeef`));
+     });
+  it('0xbadc0ffee0ddf00ddeadbeefbadc0ffee0ddf00ddeadbeefbeef should equal 0xbadc0ffee0ddf00ddeadbeefbadc0ffee0ddf00ddeadbeefbeefn',
+     async () => {
+       assertEquals(
+           toBigIntLE(Buffer.from([
+             0xef, 0xbe, 0xef, 0xbe, 0xad, 0xde, 0x0d, 0xf0, 0xdd,
+             0xe0, 0xfe, 0x0f, 0xdc, 0xba, 0xef, 0xbe, 0xad, 0xde,
+             0x0d, 0xf0, 0xdd, 0xe0, 0xfe, 0x0f, 0xdc, 0xba
+           ])),
+           BigInt(`0xbadc0ffee0ddf00ddeadbeefbadc0ffee0ddf00ddeadbeefbeef`));
+     });
 });
 
 describe('Try buffer conversion (big endian)', () => {
@@ -137,6 +157,15 @@ describe('Try buffer conversion (big endian)', () => {
             'hex')),
         BigInt(
             `0xbadc0ffee0ddf00ddeadbeefbadc0ffee0ddf00ddeadbeefbadc0ffee0ddf00ddeadbeef`));
+  });
+
+  it('other long value should equal long val', async () => {
+    assertEquals(
+        toBigIntBE(Buffer.from(
+            'd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544',
+            'hex')),
+        BigInt(
+            `0xd7f8974fb5ac78d9ac099b9ad5018bedc2ce0a72dad1827a1709da30580f0544`));
   });
 });
 
