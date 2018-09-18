@@ -25,7 +25,6 @@ matrix:
     env: TEST_SUITE=test:browser
 script: npm run $TEST_SUITE
 before_deploy:
-- npm run typedoc
 - npm pack
 deploy:
 - provider: pages
@@ -37,7 +36,7 @@ deploy:
   on:
     branch: master
     node: '10'
-    condition: "$TEST_SUITE = test:node"
+    condition: "false"
 - provider: releases
   api_key: "$GITHUB_TOKEN"
   file_glob: true
