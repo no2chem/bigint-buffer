@@ -136,21 +136,23 @@ napi_value fromBigInt (napi_env env, napi_callback_info info) {
 
   int sign_bit = 0;
   
-  bool not_64_aligned = byte_width & 7;
-  size_t overflow_len = byte_width & 7;
+  bool not_64_aligned = (byte_width & 7) != 0;
+  size_t overflow_len = not_64_aligned ? 8 - (byte_width & 0x7) : 0;
   size_t word_width = (byte_width >> 3) + (not_64_aligned ? 1 : 0);
   size_t original_word_width = word_width;
   if (word_count > word_width) {
       word_count = word_width;
   }
-  bool fits_in_stack = (word_count << 3) <= BUFFER_STACK_SIZE;
+  size_t word_width_bytes = (word_count << 3);
+  bool fits_in_stack = word_width_bytes <= BUFFER_STACK_SIZE;
 
   uint64_t* conv_buffer = (uint64_t*) raw_buffer;
   if (not_64_aligned) {
       uint64_t stack_buffer[BUFFER_STACK_SIZE];
       conv_buffer = fits_in_stack ? stack_buffer : malloc(byte_width + overflow_len);
-      memset(conv_buffer, 0, byte_width);
   }
+  
+  memset(conv_buffer, 0, byte_width + overflow_len);
   status = napi_get_value_bigint_words(env, argv[0], &sign_bit, &word_count, conv_buffer);
   assert(status == napi_ok);
 
