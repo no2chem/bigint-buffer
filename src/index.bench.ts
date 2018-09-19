@@ -3,6 +3,8 @@ import * as benchmark from 'benchmark';
 
 import {toBigIntBE, toBigIntLE, toBufferBE, toBufferLE} from './index';
 
+const BN = require('bn.js');
+
 
 // This file contains the benchmark test suite. It includes the benchmark and
 // some lightweight boilerplate code for running benchmark.js. To
@@ -23,16 +25,19 @@ const smallHex = 'deadbeef';
 const smallString = `0x${smallHex}`;
 const smallBuf: Buffer = Buffer.from(smallHex, 'hex');
 suite.add('bigint from hex string (small)', () => {
-  BigInt(smallString);
+  return BigInt(smallString);
 });
 suite.add('bigint from hex string from buffer (small)', () => {
-  BigInt(`0x${smallBuf.toString('hex')}`);
+  return BigInt(`0x${smallBuf.toString('hex')}`);
+});
+suite.add('BN from hex string from buffer (small)', () => {
+  return new BN(smallBuf.toString('hex'), 16);
 });
 suite.add('LE bigint-buffer ToBigInt (small)', () => {
-  toBigIntLE(smallBuf);
+  return toBigIntLE(smallBuf);
 });
 suite.add('BE bigint-buffer ToBigInt (small)', () => {
-  toBigIntBE(smallBuf);
+  return toBigIntBE(smallBuf);
 });
 
 // Test mid strings (aligned)
@@ -40,16 +45,19 @@ const midHex = 'badc0ffee0ddf00d';
 const midString = `0x${midHex}`;
 const midBuf: Buffer = Buffer.from(midHex, 'hex');
 suite.add('bigint from hex string (mid, aligned)', () => {
-  BigInt(midString);
+  return BigInt(midString);
 });
 suite.add('bigint from hex string from buffer (mid, aligned)', () => {
-  BigInt(`0x${midBuf.toString('hex')}`);
+  return BigInt(`0x${midBuf.toString('hex')}`);
+});
+suite.add('BN from hex string from buffer (mid, aligned)', () => {
+  return new BN(midBuf.toString('hex'), 16);
 });
 suite.add('LE bigint-buffer ToBigInt (mid, aligned)', () => {
-  toBigIntLE(midBuf);
+  return toBigIntLE(midBuf);
 });
 suite.add('BE bigint-buffer ToBigInt (mid, aligned)', () => {
-  toBigIntBE(midBuf);
+  return toBigIntBE(midBuf);
 });
 
 // Test huge strings
@@ -58,16 +66,19 @@ const hugeHex =
 const hugeString = `0x${hugeHex}`;
 const hugeBuf: Buffer = Buffer.from(hugeHex, 'hex');
 suite.add('bigint from hex string (huge)', () => {
-  BigInt(hugeString);
+  return BigInt(hugeString);
 });
 suite.add('bigint from hex string from buffer (huge)', () => {
-  BigInt(`0x${hugeBuf.toString('hex')}`);
+  return BigInt(`0x${hugeBuf.toString('hex')}`);
+});
+suite.add('BN from hex string from buffer (huge)', () => {
+  return new BN(hugeBuf.toString('hex'), 16);
 });
 suite.add('LE bigint-buffer ToBigInt (huge)', () => {
-  toBigIntLE(hugeBuf);
+  return toBigIntLE(hugeBuf);
 });
 suite.add('BE bigint-buffer ToBigInt (huge)', () => {
-  toBigIntBE(hugeBuf);
+  return toBigIntBE(hugeBuf);
 });
 
 const bigIntToBufferWithStringBE = (int: bigint, width: number): Buffer => {
@@ -86,68 +97,94 @@ const bigIntToBufferWithStringLE = (int: bigint, width: number): Buffer => {
 // Test small toBuffer
 const smallValue = 12345678n;
 suite.add('LE bigint to hex string to buffer (small)', () => {
-  bigIntToBufferWithStringLE(smallValue, 8);
+  return bigIntToBufferWithStringLE(smallValue, 8);
 });
 
 suite.add('BE bigint to hex string to buffer (small)', () => {
-  bigIntToBufferWithStringBE(smallValue, 8);
+  return bigIntToBufferWithStringBE(smallValue, 8);
+});
+
+const bnSmallValue = new BN('12345678', 10);
+suite.add('BN to buffer (small)', () => {
+  return bnSmallValue.toBuffer(8);
 });
 
 suite.add('LE bigint-buffer to buffer (small)', () => {
-  toBufferLE(smallValue, 8);
+  return toBufferLE(smallValue, 8);
 });
 
 suite.add('BE bigint-buffer to buffer (small)', () => {
-  toBufferBE(smallValue, 8);
+  return toBufferBE(smallValue, 8);
 });
+
 
 // Test large toBuffer
 const largeValue =
     0xbadc0ffee0ddf00dbadc0ffee0ddf00dbadc0ffee0ddf00dbadc0ffee0ddf00dbadc0ffee0ddf00dbadc0ffee0ddf00dn;
 suite.add('LE bigint to hex string to buffer (large)', () => {
-  bigIntToBufferWithStringLE(largeValue, 24);
+  return bigIntToBufferWithStringLE(largeValue, 24);
 });
 
 suite.add('BE bigint to hex string to buffer (large)', () => {
-  bigIntToBufferWithStringBE(largeValue, 24);
+  return bigIntToBufferWithStringBE(largeValue, 24);
+});
+
+const bnLargeValue = new BN(
+    'badc0ffee0ddf00dbadc0ffee0ddf00dbadc0ffee0ddf00dbadc0ffee0ddf00dbadc0ffee0ddf00dbadc0ffee0ddf00d',
+    16);
+suite.add('BN to buffer (large)', () => {
+  return bnLargeValue.toBuffer(24);
 });
 
 suite.add('LE bigint-buffer to buffer (large)', () => {
-  toBufferLE(largeValue, 24);
+  return toBufferLE(largeValue, 24);
 });
 
 suite.add('BE bigint-buffer to buffer (large)', () => {
-  toBufferBE(largeValue, 24);
+  return toBufferBE(largeValue, 24);
 });
 
 suite.add('LE bigint to hex string to buffer (large)', () => {
-  bigIntToBufferWithStringLE(largeValue, 8);
+  return bigIntToBufferWithStringLE(largeValue, 8);
 });
 
 suite.add('BE bigint to hex string to buffer (large)', () => {
-  bigIntToBufferWithStringBE(largeValue, 8);
+  return bigIntToBufferWithStringBE(largeValue, 8);
 });
 
 suite.add('LE bigint-buffer to buffer (large, truncated)', () => {
-  toBufferLE(largeValue, 8);
+  return toBufferLE(largeValue, 8);
 });
 
 suite.add('BE bigint-buffer to buffer (large, truncated)', () => {
-  toBufferBE(largeValue, 8);
+  return toBufferBE(largeValue, 8);
 });
 
 const b1 = Buffer.from('0123456789ABCDEF0123456789ABCDEF', 'hex');
 const b2 = Buffer.from('0123456789ABCDEF0123456789ABCDEF', 'hex');
+const bn1 = new BN('0123456789ABCDEF0123456789ABCDEF', 'hex');
+const bn2 = new BN('0123456789ABCDEF0123456789ABCDEF', 'hex');
 const n1 = 0x0123456789ABCDEF0123456789ABCDEFn;
 const n2 = 0x0123456789ABCDEF0123456789ABCDEFn;
 suite.add('Buffer equality comparison', () => {
-  return b2.compare(b1);
+  return b1.compare(b2) === 0;
+});
+
+suite.add('BN equality comparison', () => {
+  return bn1.eq(bn2);
 });
 
 suite.add('bigint equality comparison', () => {
   return n1 === n2;
 });
 
+suite.add('BN multiply', () => {
+  return bn1.mul(bn2);
+});
+
+suite.add('bigint multiply', () => {
+  return n1 * n2;
+});
 
 //#endregion
 

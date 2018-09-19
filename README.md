@@ -14,11 +14,24 @@ In many applications, manipulating 64, 128 or even 256 bit numbers is quite comm
 
 BigInts solve this problem by introducing a primitive that can hold
 arbitrary precision integers, reducing memory pressure and allowing
-the runtime to better optimize arithmetic operations. This results in significant performance improvements - up to 10x for simple equality comparisons (using `===` vs `Buffer.compare()`):
+the runtime to better optimize arithmetic operations. This results in significant performance improvements - 10x-100x for simple equality comparisons (using `===` vs `Buffer.compare()`):
 
 ```
-Buffer equality comparison: 12769805±0.85% ops/s 78.31±3.254 ns/op (92 runs)
-bigint equality comparison: 140534322±2.72% ops/s 7.12±0.900 ns/op (83 runs)
+Buffer equality comparison: 11916844±4.23% ops/s 83.91±17.293 ns/op (91 runs)
+bigint equality comparison: 798024851±0.29% ops/s 1.25±0.017 ns/op (91 runs)
+```
+
+Before BigInts, you probably used a library such as the widely used [bn.js](https://www.npmjs.com/package/bn.js).
+bn.js fares a little better than a plain Buffer, but is still 5-10x slower than the bigint:
+```
+BN equality comparison: 73255774±0.67% ops/s 13.65±0.442 ns/op (89 runs)
+```
+
+bigints are also much better with arithmetic, here are the results compared to BN for multiplying two
+128-bit integers, yielding a 4x improvement:
+```
+BN multiply: 4763236±0.49% ops/s 209.94±5.111 ns/op (93 runs)
+bigint multiply: 15268666±0.92% ops/s 65.49±2.938 ns/op (92 runs)
 ```
 
 # So what's the problem?
@@ -69,17 +82,19 @@ toBigIntLE(Buffer.from('deadbeef', 'hex'));
 
 bigint-buffer uses N-API native bindings to perform the conversion efficiently without generating the
 immediate hex strings necessary in pure javascript. This results in a significant performance increase,
-about 2x for small buffer to bigint conversions:
+about 2x for small buffer to bigint conversions, and 8x better than BN:
 
 ```
-bigint from hex string from buffer (small): 2957224±1.51% ops/s 338.15±24.758 ns/op (90 runs)
-LE bigint-buffer ToBigInt (small): 5887814±2.31% ops/s 169.84±18.687 ns/op (87 runs)
+BN to buffer (small): 981703±68.30% ops/s 1018.64±3194.648 ns/op (81 runs)
+bigint from hex string from buffer (small): 2804915±5.00% ops/s 356.52±85.371 ns/op (88 runs)
+LE bigint-buffer ToBigInt (small): 5932704±1.62% ops/s 168.56±12.971 ns/op (87 runs)
 ```
 
-And about 3.3x for bigint to buffer conversions:
+And about 3.3x for bigint to buffer conversions, and 17x better than BN:
 ```
-BE bigint to hex string to buffer (large): 1994354±0.52% ops/s 501.42±12.919 ns/op (96 runs)
-LE bigint-buffer to buffer (large, truncated): 6613815±1.23% ops/s 151.20±9.024 ns/op (90 runs)
+BN to buffer (large): 339437±2.85% ops/s 2946.06±385.504 ns/op (81 runs)
+BE bigint to hex string to buffer (large): 1714292±1.35% ops/s 583.33±37.995 ns/op (90 runs)
+BE bigint-buffer to buffer (large, truncated): 5977218±4.68% ops/s 167.30±37.284 ns/op (87 runs)
 ```
 
 You can run the benchmarks by running `npm run benchmark`.
