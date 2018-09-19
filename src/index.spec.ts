@@ -182,6 +182,14 @@ describe('Try bigint conversion (little endian)', () => {
     ]));
   });
 
+
+  it('1 should equal 1n (32 byte)', async () => {
+    toBufferLE(BigInt(`1`), 32)
+        .should.deep.equal(Buffer.from(
+            '0100000000000000000000000000000000000000000000000000000000000000',
+            'hex'));
+  });
+
   it('0xdead should equal 0xdeadn (6 byte)', async () => {
     toBufferLE(BigInt(`0xdead`), 6).should.deep.equal(Buffer.from([
       0xad, 0xde, 0, 0, 0, 0
@@ -232,6 +240,13 @@ describe('Try bigint conversion (big endian)', () => {
     toBufferBE(BigInt(`1`), 8).should.deep.equal(Buffer.from([
       0, 0, 0, 0, 0, 0, 0, 1
     ]));
+  });
+
+  it('1 should equal 1n (32 byte)', async () => {
+    toBufferBE(BigInt(`1`), 32)
+        .should.deep.equal(Buffer.from(
+            '0000000000000000000000000000000000000000000000000000000000000001',
+            'hex'));
   });
 
   it('0xdead should equal 0xdeadn (6 byte)', async () => {
