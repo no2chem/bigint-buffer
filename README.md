@@ -10,7 +10,7 @@
 
 BigInts are currently a stage 3 proposal, supported in Node 10 and V8 v6.7. BigInts are primitive arbitrary precision integers, overcoming the limitations of the number type in javascript, which only supports up to 53 bits of precision. 
 
-In many applications, manipulating 64, 128 or even 256 bit numbers is quite common. For example, database identifiers are often 128 bits, and hashes are often 256 bits. Before BigInts, manipulating these numbers safely required either allocating a Buffer or UInt8Arrays, which is quite expensive compared to a number, since Buffers are allocated on the heap. 
+In many applications, manipulating 64, 128 or even 256 bit numbers is quite common. For example, database identifiers are often 128 bits, and hashes are often 256 bits (If you're looking for hashing support, try out [bigint-hash](https://github.com/no2chem/bigint-hash)). Before BigInts, manipulating these numbers safely required either allocating a Buffer or UInt8Arrays, which is quite expensive compared to a number, since Buffers are allocated on the heap. 
 
 BigInts solve this problem by introducing a primitive that can hold
 arbitrary precision integers, reducing memory pressure and allowing
