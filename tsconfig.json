@@ -3,10 +3,9 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "build",
-    "target" : "es2017",
-    "lib" : [ "es2017", "esnext.bigint" ],
-    "sourceMap": true,
-    "experimentalBigInt" : true
+    "target" : "esnext",
+    "lib" : [ "esnext" ],
+    "sourceMap": true
   },
   "include": [
     "src/*.ts",
