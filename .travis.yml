@@ -23,6 +23,9 @@ matrix:
   - os: linux
     node_js: '10'
     env: TEST_SUITE=test:browser
+  - os: windows
+    node_js: '10'
+    env: TEST_SUITE=test:node
 script: npm run $TEST_SUITE
 before_deploy:
 - npm pack
