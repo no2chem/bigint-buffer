@@ -153,8 +153,8 @@ napi_value fromBigInt (napi_env env, napi_callback_info info) {
   bool fits_in_stack = word_width_bytes <= BUFFER_STACK_SIZE;
 
   uint64_t* conv_buffer = (uint64_t*) raw_buffer;
+  uint64_t stack_buffer[BUFFER_STACK_SIZE];
   if (not_64_aligned) {
-      uint64_t stack_buffer[BUFFER_STACK_SIZE];
       conv_buffer = fits_in_stack ? stack_buffer : malloc(byte_width + overflow_len);
   }
   
