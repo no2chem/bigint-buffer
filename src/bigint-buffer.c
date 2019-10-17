@@ -11,7 +11,13 @@
 
 // The maximum size we'll store on the stack. If we need a larger temporary
 // buffer malloc will be called.
-const size_t BUFFER_STACK_SIZE = 32;
+#define BUFFER_STACK_SIZE 32
+
+#if defined(_WIN16) || defined(_WIN32) || defined(_WIN64)
+#define bswap64(x) _byteswap_uint64(x)
+#else
+#define bswap64(x) __builtin_bswap64(x)
+#endif
 
 /**
  * Converts a Buffer to bigint.
@@ -63,7 +69,7 @@ napi_value toBigInt (napi_env env, napi_callback_info info) {
   // swap
   if (big_endian) {
     if (len_in_words == 1) {
-        as_64_aligned[0] = not_64_aligned ? __builtin_bswap64(as_64_aligned[0]) >> overflow_in_bits :  __builtin_bswap64(as_64_aligned[0]);
+        as_64_aligned[0] = not_64_aligned ? bswap64(as_64_aligned[0]) >> overflow_in_bits :  bswap64(as_64_aligned[0]);
     } else {
         uint64_t temp;
         size_t last_word = len_in_words - 1;
@@ -77,7 +83,7 @@ napi_value toBigInt (napi_env env, napi_callback_info info) {
         } 
         uint64_t prev_overflow = 0;
         for (offset = last_word; offset >= 0; offset--) {
-            uint64_t as_little_endian = __builtin_bswap64(as_64_aligned[offset]);
+            uint64_t as_little_endian = bswap64(as_64_aligned[offset]);
             uint64_t overflow = as_little_endian & BIT_MASK(overflow_in_bits);
             as_64_aligned[offset] = not_64_aligned ? (as_little_endian >> overflow_in_bits) | prev_overflow : as_little_endian;
             prev_overflow = overflow << (64 - overflow_in_bits);
@@ -147,8 +153,8 @@ napi_value fromBigInt (napi_env env, napi_callback_info info) {
   bool fits_in_stack = word_width_bytes <= BUFFER_STACK_SIZE;
 
   uint64_t* conv_buffer = (uint64_t*) raw_buffer;
+  uint64_t stack_buffer[BUFFER_STACK_SIZE];
   if (not_64_aligned) {
-      uint64_t stack_buffer[BUFFER_STACK_SIZE];
       conv_buffer = fits_in_stack ? stack_buffer : malloc(byte_width + overflow_len);
   }
   
@@ -163,13 +169,13 @@ napi_value fromBigInt (napi_env env, napi_callback_info info) {
         size_t end_ptr = last_word;
         int32_t offset;
         for (offset = 0; offset < (int32_t)(conv_words / 2); offset++) {
-            temp = __builtin_bswap64(conv_buffer[offset]);
-            conv_buffer[offset] = __builtin_bswap64(conv_buffer[end_ptr]);
+            temp = bswap64(conv_buffer[offset]);
+            conv_buffer[offset] = bswap64(conv_buffer[end_ptr]);
             conv_buffer[end_ptr] = temp;
             end_ptr--;
         } 
         if (conv_words & 1) {
-            conv_buffer[conv_words / 2] = __builtin_bswap64(conv_buffer[conv_words / 2]);;
+            conv_buffer[conv_words / 2] = bswap64(conv_buffer[conv_words / 2]);;
         }
   }
   if (not_64_aligned) {

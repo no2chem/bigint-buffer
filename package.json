@@ -1,6 +1,6 @@
 {
   "name": "bigint-buffer",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "bigint to buffer conversion with native support",
   "main": "dist/node.js",
   "browser": {
@@ -22,7 +22,7 @@
     "rebuild": "node-gyp rebuild",
     "check": "gts check",
     "clean": "gts clean",
-    "compile": "mkdir -p dist; tsc -p .;rollup -c > dist/node.js && BROWSER=true rollup -c > dist/browser.js; cp build/src/*.d.ts dist",
+    "compile": "mkdirp dist && tsc -p . && rollup -c > dist/node.js && cross-env BROWSER=true rollup -c > dist/browser.js && cpx \"build/src/*.d.ts\" dist",
     "fix": "gts fix",
     "pretest": "npm run compile",
     "posttest": "npm run check"
@@ -54,6 +54,8 @@
     "bn.js": "^4.11.8",
     "chai": "^4.1.2",
     "coveralls": "^3.0.2",
+    "cpx": "^1.5.0",
+    "cross-env": "^6.0.3",
     "gts": "^0.8.0",
     "istanbul": "^0.4.1",
     "karma": "^3.0.0",
@@ -62,7 +64,8 @@
     "karma-mocha": "^1.3.0",
     "karma-mocha-reporter": "^2.2.5",
     "karma-webpack": "^3.0.0",
-    "microtime": "^2.1.8",
+    "microtime": "^3.0.0",
+    "mkdirp": "^0.5.1",
     "mocha": "^5.2.0",
     "pre-commit": "^1.2.2",
     "rollup": "^0.65.2",
