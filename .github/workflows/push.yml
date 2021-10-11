@@ -27,8 +27,14 @@ jobs:
       - name: install prebuildify
         run: npm install --global prebuildify@4.2.1
 
-      - name: prebuild project
+      - name: prebuild binary files
         run: prebuildify --napi --strip
+
+      - name: name built binary by environment
+      - run: cp -f ./prebuilds/*/node.napi.node ./prebuilds/*/bigint_buffer.node
+        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
+      - run: cp -Force ./prebuilds/*/node.napi.node ./prebuilds/*/bigint_buffer.node
+        if: startsWith(matrix.os, 'windows')
 
       - name: Upload prebuild-assets
         uses: actions/upload-artifact@v2
