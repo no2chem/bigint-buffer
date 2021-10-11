@@ -52,29 +52,18 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: prebuilds-ubuntu-18.04-x64
-      - run: ls
-      - name: extract ubuntu-18.04 binaries
-        run: |
-          unzip ./prebuils/prebuilds-ubuntu-18.04-x64.zip
-          mv prebuilds-ubuntu-18.04-x64/*/bigint_buffer.node ./build
 
       - name: download windows-latest binaries
         uses: actions/download-artifact@v2
         with:
           name: prebuilds-windows-latest-x64
-      - name: extract windows-latest binaries
-        run: |
-          unzip prebuilds-windows-latest-x64.zip
-          mv prebuilds-windows-latest-x64/*/bigint_buffer.node ./build
 
       - name: download macos-latest binaries
         uses: actions/download-artifact@v2
         with:
           name: prebuilds-macos-latest-x64
-      - name: extract macos-latest binaries
-        run: |
-          unzip prebuilds-macos-latest-x64.zip
-          mv prebuilds-macos-latest-x64/*/bigint_buffer.node ./build
+
+      - run: mv */bigint_buffer.node ./build
 
       - name: configure Git
         run: |
