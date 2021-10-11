@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    if: ${{ !startsWith(github.event.head_commit.message, '[Github Actions]') # Prevent recursive builds
+    if: ${{ !startsWith(github.event.head_commit.message, '[Github Actions]') }} # Prevent recursive builds
     strategy:
       matrix:
         node: [12.x]
