@@ -64,9 +64,9 @@ jobs:
         with:
           name: prebuilds-macos-latest-x64
 
-      - run: mv linux-x64/bigint_buffer.node binaries
-      - run: mv win32-x64/bigint_buffer.node binaries
-      - run: mv darwin-x64/bigint_buffer.node binaries
+      - run: mv linux-x64 binaries
+      - run: mv win32-x64 binaries
+      - run: mv darwin-x64 binaries
 
       - name: configure Git
         run: |
