@@ -42,25 +42,20 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: prebuilds-${{ matrix.os }}-x64
-          path: |
-            prebuilds
+          path: prebuilds
 
   aggregate_binaries:
     needs: build
-    strategy:
-      matrix:
-        node: [12.x]
-        os: [ubuntu-18.04, windows-latest, macos-latest]
     runs-on: ubuntu-18.04
     steps:
       - name: download ubuntu-18.04 binaries
         uses: actions/download-artifact@v2
         with:
           name: prebuilds-ubuntu-18.04-x64
+      - run: ls
       - name: extract ubuntu-18.04 binaries
-        uses: actions/checkout@v2
-      - run: |
-          unzip prebuilds-ubuntu-18.04-x64.zip
+        run: |
+          unzip ./prebuils/prebuilds-ubuntu-18.04-x64.zip
           mv prebuilds-ubuntu-18.04-x64/*/bigint_buffer.node ./build
 
       - name: download windows-latest binaries
@@ -68,8 +63,7 @@ jobs:
         with:
           name: prebuilds-windows-latest-x64
       - name: extract windows-latest binaries
-        uses: actions/checkout@v2
-      - run: |
+        run: |
           unzip prebuilds-windows-latest-x64.zip
           mv prebuilds-windows-latest-x64/*/bigint_buffer.node ./build
 
@@ -78,8 +72,7 @@ jobs:
         with:
           name: prebuilds-macos-latest-x64
       - name: extract macos-latest binaries
-        uses: actions/checkout@v2
-      - run: |
+        run: |
           unzip prebuilds-macos-latest-x64.zip
           mv prebuilds-macos-latest-x64/*/bigint_buffer.node ./build
 
