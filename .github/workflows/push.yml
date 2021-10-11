@@ -63,7 +63,7 @@ jobs:
         with:
           name: prebuilds-macos-latest-x64
 
-      - run: mv */bigint_buffer.node ./build
+      - run: mv */bigint_buffer.node ./binaries
 
       - name: configure Git
         run: |
