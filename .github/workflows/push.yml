@@ -72,6 +72,6 @@ jobs:
           git config --global user.email "micaiahreid@gmail.com"
           git config --global user.name "Micaiah Reid"
 
-      - run: git add built
+      - run: git add binaries
       - run: git commit -m "[GitHub Actions] Updated binaries."
       - run: git push origin
