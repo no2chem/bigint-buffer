@@ -69,9 +69,9 @@ jobs:
 
       - name: configure Git
         run: |
-          git config --global user.email "davidmurdoch@users.noreply.github.com"
-          git config --global user.name "David Murdoch"
-          git config pull.rebase true
+          git config --global user.name 'Robot'
+          git config --global user.email 'robot@trufflesuite.com'
+          git remote set-url origin https://robot:${GITHUB_TOKEN}@github.com/$GITHUB_REPOSITORY
 
       - run: git add built
       - run: git commit -m "[GitHub Actions] Updated binaries."
