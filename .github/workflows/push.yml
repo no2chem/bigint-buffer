@@ -1,0 +1,37 @@
+name: Build for applicable OS
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, windows-latest, macos-latest]
+  steps:
+    - uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Use Node.js 14
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.22.1
+
+    - name: install node-gyp
+      run: npm install --global node-gyp@8.2.0
+
+    - name: install prebuildify
+      run: npm install --global prebuildify@4.2.1
+
+    - name: prebuild project
+      run: prebuildify --napi --strip
+
+    - name: Upload prebuild-assets
+      uses: actions/upload-artifact@v2
+      with:
+        name: prebuilds-${{ matrix.os }}-x64
+        path: |
+          prebuilds
