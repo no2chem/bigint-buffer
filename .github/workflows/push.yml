@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+    if: ${{ !startsWith(github.event.head_commit.message, '[Github Actions]') # Prevent recursive builds
     strategy:
       matrix:
         node: [12.x]
@@ -43,3 +44,51 @@ jobs:
           name: prebuilds-${{ matrix.os }}-x64
           path: |
             prebuilds
+
+  aggregate_binaries:
+    needs: build
+    strategy:
+      matrix:
+        node: [12.x]
+        os: [ubuntu-18.04, windows-latest, macos-latest]
+    runs-on: ubuntu-18.04
+    steps:
+      - name: download ubuntu-18.04 binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: prebuilds-ubuntu-18.04-x64
+      - name: extract ubuntu-18.04 binaries
+        uses: actions/checkout@v2
+        run: |
+          unzip prebuilds-ubuntu-18.04-x64.zip
+          mv prebuilds-ubuntu-18.04-x64/*/bigint_buffer.node ./build
+
+      - name: download windows-latest binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: prebuilds-windows-latest-x64
+      - name: extract windows-latest binaries
+        uses: actions/checkout@v2
+        run: |
+          unzip prebuilds-windows-latest-x64.zip
+          mv prebuilds-windows-latest-x64/*/bigint_buffer.node ./build
+
+      - name: download macos-latest binaries
+        uses: actions/download-artifact@v2
+        with:
+          name: prebuilds-macos-latest-x64
+      - name: extract macos-latest binaries
+        uses: actions/checkout@v2
+        run: |
+          unzip prebuilds-macos-latest-x64.zip
+          mv prebuilds-macos-latest-x64/*/bigint_buffer.node ./build
+
+      - name: configure Git
+        run: |
+          git config --global user.email "davidmurdoch@users.noreply.github.com"
+          git config --global user.name "David Murdoch"
+          git config pull.rebase true
+
+      - run: git add built
+      - run: git commit -m "[GitHub Actions] Updated binaries."
+      - run: git push origin
