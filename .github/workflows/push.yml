@@ -30,7 +30,6 @@ jobs:
       - name: prebuild binary files
         run: prebuildify --napi --strip
 
-      - name: name built binary by environment
       - run: cp -f ./prebuilds/*/node.napi.node ./prebuilds/*/bigint_buffer.node
         if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
       - run: cp -Force ./prebuilds/*/node.napi.node ./prebuilds/*/bigint_buffer.node
