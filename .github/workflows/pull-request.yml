@@ -62,7 +62,7 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
       - run: cp -rf darwin-x64 binaries
         if: startsWith(matrix.os, 'macos')
-      - run: cp -rf win32-x64 binaries
+      - run: cp -Recurse -Force win32-x64 binaries
         if: startsWith(matrix.os, 'windows')
 
       - run: npm ci
