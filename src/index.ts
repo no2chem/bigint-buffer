@@ -4,13 +4,15 @@ interface ConverterInterface {
   fromBigInt(num: BigInt, buf: Buffer, bigEndian?: boolean): Buffer;
 }
 
-declare var process: {browser: boolean;};
+declare var process: {browser: boolean; platform: string};
 
 let converter: ConverterInterface;
 
 if (!process.browser) {
   try {
-    converter = require('bindings')('bigint_buffer');
+    // TODO: add arch-specific binaries as necessary
+    converter = require('bindings')(
+        `../binaries/${process.platform}-x64/bigint_buffer`);
   } catch (e) {
     console.warn(
         'bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)');
