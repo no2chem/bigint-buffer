@@ -31,9 +31,12 @@ jobs:
       - name: prebuild binary files
         run: prebuildify --napi --strip
 
-      - run: |
-          PLATFORM=$(node -e 'console.log(process.platform)')
-          mv -f ./prebuilds/${PLATFORM}-x64/node.napi.node ./prebuilds/${PLATFORM}-x64/bigint_buffer.node
+      - run: mv -f ./prebuilds/linux-x64/node.napi.node ./prebuilds/linux-x64/bigint_buffer.node
+        if: startsWith(matrix.os, 'ubuntu')
+      - run: mv -f ./prebuilds/darwin-x64/node.napi.node ./prebuilds/darwin-x64/bigint_buffer.node
+        if: startsWith(matrix.os, 'macos')
+      - run: mv -Force ./prebuilds/win32-x64/node.napi.node ./prebuilds/win32-x64/bigint_buffer.node
+        if: startsWith(matrix.os, 'windows')
 
       - name: Upload prebuild-assets
         uses: actions/upload-artifact@v2
@@ -41,7 +44,7 @@ jobs:
           name: prebuilds-${{ matrix.os }}-x64
           path: prebuilds
 
-  run_tests:
+  aggregate_binaries:
     needs: build
     strategy:
       matrix:
@@ -55,9 +58,12 @@ jobs:
         with:
           name: prebuilds-${{ matrix.os }}-x64
 
-      - run: |
-          PLATFORM=$(node -e 'console.log(process.platform)')
-          cp -rf ${PLATFORM}-x64 binaries
+      - run: cp -rf linux-x64 binaries
+        if: startsWith(matrix.os, 'ubuntu')
+      - run: cp -rf darwin-x64 binaries
+        if: startsWith(matrix.os, 'macos')
+      - run: cp -rf win32-x64 binaries
+        if: startsWith(matrix.os, 'windows')
 
       - run: npm ci
       - run: npm run fix
