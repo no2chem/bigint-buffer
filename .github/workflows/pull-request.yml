@@ -1,16 +1,13 @@
-name: Build for applicable OS
+name: Build and Test for applicable OS
 
-on:
-  push:
-    #branches: [master]
+on: [pull_request]
 
 jobs:
   build:
-    if: ${{ !startsWith(github.event.head_commit.message, '[Github Actions]') }} # Prevent recursive builds
     strategy:
       matrix:
-        node: [12.x]
-        os: [ubuntu-18.04, windows-latest, macos-latest]
+        node: [14.x]
+        os: [ubuntu-20.04, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -43,13 +40,14 @@ jobs:
         with:
           name: prebuilds-${{ matrix.os }}-x64
           path: prebuilds
+          retention-days: 1
 
-  aggregate_binaries:
+  run_tests:
     needs: build
     strategy:
       matrix:
         node: [10.x, 11.x, 12.x, 13.x, 14.x, 15.x, 16.x]
-        os: [ubuntu-18.04, windows-latest, macos-latest]
+        os: [ubuntu-20.04, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
