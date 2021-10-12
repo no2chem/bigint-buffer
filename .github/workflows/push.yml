@@ -2,15 +2,15 @@ name: Build for applicable OS
 
 on:
   push:
-    #branches: [master]
+    branches: [master]
 
 jobs:
   build:
-    if: ${{ !startsWith(github.event.head_commit.message, '[Github Actions]') }} # Prevent recursive builds
+    if: ${{ !startsWith(github.event.head_commit.message, '[Github Actions]')  && !startsWith(github.event.head_commit.message, '[Skip CI]') }} # Prevent recursive builds
     strategy:
       matrix:
-        node: [12.x]
-        os: [ubuntu-18.04, windows-latest, macos-latest]
+        node: [14.x]
+        os: [ubuntu-20.04, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -43,16 +43,17 @@ jobs:
         with:
           name: prebuilds-${{ matrix.os }}-x64
           path: prebuilds
+          retention-days: 1
 
   aggregate_binaries:
     needs: build
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: download ubuntu-18.04 binaries
+      - name: download ubuntu-20.04 binaries
         uses: actions/download-artifact@v2
         with:
-          name: prebuilds-ubuntu-18.04-x64
+          name: prebuilds-ubuntu-20.04-x64
 
       - name: download windows-latest binaries
         uses: actions/download-artifact@v2
@@ -68,25 +69,11 @@ jobs:
       - run: cp -rf win32-x64 binaries
       - run: cp -rf darwin-x64 binaries
 
-  run_tests:
-    needs: aggregate_binaries
-    strategy:
-      matrix:
-        node: [10.x, 11.x, 12.x, 13.x, 14.x, 15.x, 16.x]
-        os: [ubuntu-18.04, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - run: npm ci
-      - run: npm run fix
-      - run: npm run pretest
-      - run: npm run test
-      - run: npm run posttest
+      - name: configure Git
+        run: |
+          git config --global user.email "micaiahreid@gmail.com"
+          git config --global user.name "Micaiah Reid"
 
-      # - name: configure Git
-      #   run: |
-      #     git config --global user.email "micaiahreid@gmail.com"
-      #     git config --global user.name "Micaiah Reid"
-
-      # - run: git add binaries
-      # - run: git commit -m "[GitHub Actions] Updated binaries."
-      # - run: git push origin
+      - run: git add binaries
+      - run: git commit -m "[GitHub Actions] Updated binaries."
+      - run: git push origin
