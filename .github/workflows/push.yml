@@ -2,7 +2,7 @@ name: Build for applicable OS
 
 on:
   push:
-    branches: [master]
+    #branches: [master]
 
 jobs:
   build:
@@ -68,11 +68,25 @@ jobs:
       - run: mv -f win32-x64 binaries
       - run: mv -f darwin-x64 binaries
 
-      - name: configure Git
-        run: |
-          git config --global user.email "micaiahreid@gmail.com"
-          git config --global user.name "Micaiah Reid"
+  run_tests:
+    needs: aggregate_binaries
+    strategy:
+      matrix:
+        node: [10.x, 11.x, 12.x, 13.x, 14.x, 15.x, 16.x]
+        os: [ubuntu-18.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: npm ci
+      - run: npm run fix
+      - run: npm run pretest
+      - run: npm run test
+      - run: npm run posttest
 
-      - run: git add binaries
-      - run: git commit -m "[GitHub Actions] Updated binaries."
-      - run: git push origin
+      # - name: configure Git
+      #   run: |
+      #     git config --global user.email "micaiahreid@gmail.com"
+      #     git config --global user.name "Micaiah Reid"
+
+      # - run: git add binaries
+      # - run: git commit -m "[GitHub Actions] Updated binaries."
+      # - run: git push origin
