@@ -64,9 +64,9 @@ jobs:
         with:
           name: prebuilds-macos-latest-x64
 
-      - run: cp -f linux-x64 binaries
-      - run: cp -f win32-x64 binaries
-      - run: cp -f darwin-x64 binaries
+      - run: cp -rf linux-x64 binaries
+      - run: cp -rf win32-x64 binaries
+      - run: cp -rf darwin-x64 binaries
 
   run_tests:
     needs: aggregate_binaries
