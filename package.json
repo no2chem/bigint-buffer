@@ -1,6 +1,6 @@
 {
-  "name": "bigint-buffer",
-  "version": "1.1.5",
+  "name": "@trufflesuite/bigint-buffer",
+  "version": "1.1.6",
   "description": "bigint to buffer conversion with native support",
   "main": "dist/node.js",
   "browser": {
@@ -29,10 +29,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/no2chem/bigint-buffer.git"
+    "url": "https://github.com/trufflesuite/bigint-buffer.git"
   },
   "bugs": {
-    "url": "https://github.com/no2chem/bigint-buffer/issues"
+    "url": "https://github.com/trufflesuite/bigint-buffer/issues"
   },
   "keywords": [
     "bigint",
@@ -84,6 +84,7 @@
     "access": "public"
   },
   "contributors": [
-    "Michael Wei <mwei@vmware.com> (https://github.com/no2chem)"
+    "Michael Wei <mwei@vmware.com> (https://github.com/no2chem)",
+    "Micaiah Reid <micaiah.reid@consensys.net> (https://github.com/MicaiahReid)"
   ]
 }
