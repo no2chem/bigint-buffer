@@ -11,7 +11,7 @@ let converter: ConverterInterface;
 if (!process.browser) {
   try {
     // TODO: add arch-specific binaries as necessary
-    converter = require('bindings')(
+    converter = require('node-gyp-build')(
         `../binaries/${process.platform}-x64/bigint_buffer`);
   } catch (e) {
     console.warn(

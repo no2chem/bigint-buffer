@@ -12,7 +12,7 @@
     "coverage": "istanbul cover ./test/index.js",
     "coveralls": "npm run coverage && coveralls <coverage/lcov.info",
     "lint": "gts check",
-    "install": "npm run rebuild || echo \"Couldn't build bindings. Non-native version used.\"",
+    "install": "node-gyp-build || echo \"Couldn't build bindings. Non-native version used.\"",
     "prepare": "npm run compile",
     "prepublishOnly": "rm -rf build/Release; rm build/Makefile; rm build/gyp-*; rm build/*.mk; rm build/*.Makefile; rm *.tgz",
     "test:browser": "karma start karma.conf.js",
