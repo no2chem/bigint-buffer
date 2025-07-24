@@ -22,6 +22,9 @@ const assertEquals = (n0: BigInt, n1: BigInt) => {
 };
 
 describe('Try buffer conversion (little endian)', () => {
+  it('throws on too-large buffer', () => {
+    chai.expect(() => toBigIntLE(Buffer.alloc(1025))).toThrow();
+  });
   it('0 should equal 0n', () => {
     assertEquals(toBigIntLE(Buffer.from([0])), BigInt('0'));
   });

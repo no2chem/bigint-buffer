@@ -16,6 +16,8 @@ if (!process.browser) {
         'bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)');
   }
 }
+const MAX_SAFE_BUFFER_LENGTH = 256;
+
 
 /**
  * Convert a little-endian buffer into a BigInt.
@@ -23,6 +25,9 @@ if (!process.browser) {
  * @returns A BigInt with the little-endian representation of buf.
  */
 export function toBigIntLE(buf: Buffer): bigint {
+  if (buf.length > MAX_SAFE_BUFFER_LENGTH) {
+    throw new Error(`Buffer too large: ${buf.length} bytes (max ${MAX_SAFE_BUFFER_LENGTH})`);
+  }
   if (process.browser || converter === undefined) {
     const reversed = Buffer.from(buf);
     reversed.reverse();
@@ -41,6 +46,9 @@ export function toBigIntLE(buf: Buffer): bigint {
  * @returns A BigInt with the big-endian representation of buf.
  */
 export function toBigIntBE(buf: Buffer): bigint {
+  if (buf.length > MAX_SAFE_BUFFER_LENGTH) {
+    throw new Error(`Buffer too large: ${buf.length} bytes (max ${MAX_SAFE_BUFFER_LENGTH})`);
+  }
   if (process.browser || converter === undefined) {
     const hex = buf.toString('hex');
     if (hex.length === 0) {

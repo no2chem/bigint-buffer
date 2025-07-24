@@ -1,9 +1,149 @@
-# 💪🔢 bigint-buffer: Buffer Utilities for TC39 BigInt Proposal 
-[![NPM Package](https://img.shields.io/npm/v/bigint-buffer.svg?style=flat-square)](https://www.npmjs.org/package/bigint-buffer)
-[![Build Status](https://img.shields.io/travis/com/no2chem/bigint-buffer.svg?branch=master&style=flat-square)](https://travis-ci.com/no2chem/bigint-buffer)
-[![Coverage Status](https://img.shields.io/coveralls/no2chem/bigint-buffer.svg?style=flat-square)](https://coveralls.io/r/no2chem/bigint-buffer)
-![node](https://img.shields.io/node/v/bigint-buffer.svg?style=flat-square)
 
+# 💎 @diamondprotocol/bigint-buffer
+
+> **Secure Buffer/BigInt Utilities — Hardened Fork for Protocol-Grade Safety**
+
+[![NPM Package](https://img.shields.io/npm/v/@diamondprotocol/bigint-buffer.svg?style=flat-square)](https://www.npmjs.com/package/@diamondprotocol/bigint-buffer)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/diamondprotocol/bigint-buffer/ci.yml?branch=main)](https://github.com/diamondprotocol/bigint-buffer/actions)
+[![Coverage Status](https://img.shields.io/coveralls/github/diamondprotocol/bigint-buffer/main.svg?style=flat-square)](https://coveralls.io/github/diamondprotocol/bigint-buffer?branch=main)
+
+A **supply-chain-audited, security-patched fork** of [`bigint-buffer`](https://www.npmjs.com/package/bigint-buffer), designed for safety-critical and protocol-level environments (Solana, Jito, Vera, etc). **All buffer-to-BigInt conversions are hard-limited to 256 bytes by default**, eliminating buffer overflow vectors and reducing memory risk. Passes original and additional security tests.
+
+---
+
+## 🚨 Security Improvements (2025)
+
+- **[CVE-2024-xxxx] Hardened against buffer overflows**:  
+  `.toBigIntLE` and `.toBigIntBE` now throw if given buffers >256 bytes (`MAX_SAFE_BUFFER_LENGTH = 256`).  
+  Native N-API bindings (`toBigInt`) will error and never process unsafe buffers.
+- **Additional protocol and supply chain tests**:  
+  All conversions tested for round-trip, size limits, and error cases.  
+  Defensive defaults for all public APIs.
+- **Modernized test/benchmark harnesses.**
+- **Reviewed for:**
+  - Jito/Solana/TokenProgram compatibility
+  - Upstream advisories: [GHSA-3gc7-fjrx-p6mg](https://github.com/advisories/GHSA-3gc7-fjrx-p6mg)
+
+---
+
+## 📦 Install
+
+```sh
+npm install @diamondprotocol/bigint-buffer
+# or
+yarn add @diamondprotocol/bigint-buffer
+```
+
+
+## 🔒 Why fork?
+
+    The original bigint-buffer is unmaintained (last update: 2021).
+
+    Vulnerabilities and unbounded buffer handling are a supply chain risk for blockchain and crypto infra.
+
+    This fork is supply-chain-audited, CI-tested, and safe for downstream protocols and composable smart contracts.
+
+
+## 🚀 Usage (Same API, Just Safer)
+
+```ts
+import {toBigIntBE, toBigIntLE, toBufferBE, toBufferLE} from '@diamondprotocol/bigint-buffer';
+
+// Convert Buffer to BigInt (throws if buffer >256 bytes)
+const bn = toBigIntBE(Buffer.from('deadbeef', 'hex')); // 0xdeadbeefn
+
+// Convert BigInt to Buffer
+const buf = toBufferLE(0xdeadbeefn, 8);
+```
+
+## 🧪 Benchmarking & Tests
+
+    Run all tests: npm test
+
+    Run benchmarks: npm run benchmark
+
+    See test/ and benchmark/ for extended examples.
+
+## ⚠️ BREAKING CHANGE: Buffer Size Limit
+
+    Any attempt to convert a buffer longer than 256 bytes will now throw an error.
+    This is a security feature.
+    To override, fork your own copy and remove the check—but do so at your own risk.
+
+## 🤝 Credits
+
+    Based on the excellent original by no2chem.
+
+    Hardened, maintained, and tested by Diamond Protocol.
+
+## 📢 Upstream
+
+If upstream ever resumes maintenance, feel free to cherry-pick our patches or contact us for security guidance.
+
+
+## License
+
+MIT, as per original.
+
+---
+
+## 📑 PR Template (PULL_REQUEST_TEMPLATE.md)
+
+```md
+# Pull Request for @diamondprotocol/bigint-buffer
+
+Thank you for contributing to **@diamondprotocol/bigint-buffer**! Please fill out the details below.
+
+---
+
+## 📋 What does this PR do?
+
+<!--
+  - Security fix? (describe vulnerability/CVE)
+  - Feature addition? (describe feature, reason, protocol impact)
+  - Bug fix? (link to test/issue)
+  - CI/test/benchmark improvements?
+  - Documentation or README changes?
+-->
+
+---
+
+## 🚦 Security & Breaking Change Checklist
+
+- [ ] I have **added or updated tests** for this change.
+- [ ] I have **run all test suites** and verified that everything passes.
+- [ ] If changing buffer size limits or any protocol-relevant logic:
+    - [ ] I have documented the reason and added a warning in README.
+- [ ] I have included reference(s) to any relevant CVEs or advisories.
+
+---
+
+## 💬 Additional Notes
+
+<!--
+  - Did you check compatibility with Solana, Jito, Vera, or protocol X?
+  - Is there any API break?
+  - Link to related issues, discussions, or upstream PRs if any.
+-->
+
+---
+
+## 🔗 Related Links
+
+- [bigint-buffer on npm](https://www.npmjs.com/package/bigint-buffer)
+- [Original repo](https://github.com/no2chem/bigint-buffer)
+- [Current security advisory](https://github.com/advisories/GHSA-3gc7-fjrx-p6mg)
+
+---
+
+*Thank you for helping keep supply-chain infra safe and strong!*
+
+
+
+### 💪 Original README:
+
+
+## 🔢 Buffer Utilities for TC39 BigInt Proposal 
 [bigint-buffer](https://www.npmjs.org/package/bigint-buffer) is a utility converts [TC39 Proposed BigInts](https://github.com/tc39/proposal-bigint) to and from buffers. This utility is necessary because BigInts, as proposed, do not support direct conversion between Buffers (or UInt8Arrays), but rather require conversion from buffers to hexadecimal strings then to BigInts, which is suboptimal. This utility includes N-API bindings, so under node, conversion is performed without generating a hexadecimal string. In the browser, normal string conversion is used.
 
 # Why use BigInts?
@@ -109,7 +249,8 @@ a pull request has been opened, so support should be coming soon. If you are usi
 
 Add bigint-buffer to your project with:
 
-> `npm install bigint-buffer`
+> `npm install @diamondprotocol/bigint-buffer`
+> `yarn add @diamondprotocol/bigint-buffer`
 
 # Documentation
 

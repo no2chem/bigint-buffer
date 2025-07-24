@@ -6,6 +6,7 @@
 #include <string.h>
 #include <assert.h>
 #include <limits.h> 
+#define MAX_SAFE_BUFFER_LENGTH 256
 
 #define BIT_MASK(n) (~( ((~0ull) << ((n)-1)) << 1 ))
 
@@ -33,6 +34,25 @@ napi_value toBigInt (napi_env env, napi_callback_info info) {
 
   status = napi_get_cb_info(env, info, &argc, argv, NULL, NULL);
   assert(status == napi_ok);
+
+  if (argc < 1) {
+    napi_throw_error(env, "EINVAL", "Too few arguments");
+    return NULL;
+  }
+
+  bool big_endian;
+  status = napi_get_value_bool(env, argv[1], &big_endian);
+  if (status == napi_boolean_expected) { big_endian = false; }
+
+  uint8_t* buffer;
+  size_t len;
+  status = napi_get_buffer_info(env, argv[0], (void**) &buffer, &len);
+  assert(status == napi_ok);
+
+  if (len > MAX_SAFE_BUFFER_LENGTH) {
+    napi_throw_error(env, "EINVAL", "Buffer too large for toBigInt");
+    return NULL;
+  }
 
   if (argc < 1) {
     napi_throw_error(env, "EINVAL", "Too few arguments");
