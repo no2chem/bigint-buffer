@@ -1,7 +1,7 @@
 {
   "name": "bigint-buffer",
   "version": "1.1.5",
-  "description": "bigint to buffer conversion with native support",
+  "description": "[DEPRECATED - use @vekexasia/bigint-buffer2] bigint to buffer conversion with native support",
   "main": "dist/node.js",
   "browser": {
     "./dist/node.js": "./dist/browser.js"
