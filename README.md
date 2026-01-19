@@ -1,4 +1,29 @@
-# 💪🔢 bigint-buffer: Buffer Utilities for TC39 BigInt Proposal 
+# 💪🔢 bigint-buffer: Buffer Utilities for TC39 BigInt Proposal
+
+> **⚠️ DEPRECATION NOTICE**
+>
+> This package is **no longer maintained** and contains a known security vulnerability ([CVE-2025-3194](https://security.snyk.io/vuln/SNYK-JS-BIGINTBUFFER-3364597)).
+>
+> Please migrate to **[@vekexasia/bigint-buffer2](https://www.npmjs.com/package/@vekexasia/bigint-buffer2)**, a modern, actively maintained replacement that:
+> - Fixes all known security vulnerabilities (CVE-2025-3194, issues #40, #59, #12, #22)
+> - Uses Rust native bindings (via napi-rs) instead of deprecated N-API/node-gyp
+> - Provides full browser support with automatic JS fallback
+> - Supports both ESM and CommonJS module formats
+> - Includes TypeScript types out of the box
+> - Offers additional features: signed integer support, `toBufferBEInto`/`toBufferLEInto` for zero-allocation writes
+>
+> ```bash
+> npm install @vekexasia/bigint-buffer2
+> ```
+>
+> The API is fully compatible - just update your imports:
+> ```typescript
+> // Before
+> import { toBigIntBE, toBufferBE } from 'bigint-buffer';
+> // After
+> import { toBigIntBE, toBufferBE } from '@vekexasia/bigint-buffer2';
+> ```
+
 [![NPM Package](https://img.shields.io/npm/v/bigint-buffer.svg?style=flat-square)](https://www.npmjs.org/package/bigint-buffer)
 [![Build Status](https://img.shields.io/travis/com/no2chem/bigint-buffer.svg?branch=master&style=flat-square)](https://travis-ci.com/no2chem/bigint-buffer)
 [![Coverage Status](https://img.shields.io/coveralls/no2chem/bigint-buffer.svg?style=flat-square)](https://coveralls.io/r/no2chem/bigint-buffer)
