@@ -149,8 +149,8 @@ napi_value fromBigInt (napi_env env, napi_callback_info info) {
   if (word_count > word_width) {
       word_count = word_width;
   }
-  size_t word_width_bytes = (word_count << 3);
-  bool fits_in_stack = word_width_bytes <= BUFFER_STACK_SIZE;
+  size_t buffer_size = byte_width + overflow_len;
+  bool fits_in_stack = buffer_size <= BUFFER_STACK_SIZE;
 
   uint64_t* conv_buffer = (uint64_t*) raw_buffer;
   uint64_t stack_buffer[BUFFER_STACK_SIZE];
