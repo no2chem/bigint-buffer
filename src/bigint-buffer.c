@@ -9,9 +9,10 @@
 
 #define BIT_MASK(n) (~( ((~0ull) << ((n)-1)) << 1 ))
 
-// The maximum size we'll store on the stack. If we need a larger temporary
-// buffer malloc will be called.
-#define BUFFER_STACK_SIZE 32
+// Number of uint64_t words to allocate on the stack for temporary buffers.
+// If the required buffer exceeds this, malloc is used instead.
+#define BUFFER_STACK_WORDS 32
+#define BUFFER_STACK_BYTES (BUFFER_STACK_WORDS * sizeof(uint64_t))
 
 #if defined(_WIN16) || defined(_WIN32) || defined(_WIN64)
 #define bswap64(x) _byteswap_uint64(x)
@@ -54,9 +55,9 @@ napi_value toBigInt (napi_env env, napi_callback_info info) {
   // Buffer is managed by VM, so copy it out (TODO: perhaps we can increase refcount?)
   size_t aligned_len = len + overflow_len;
   size_t len_in_words = not_64_aligned ? (len >> 3) + 1 : (len >> 3);
-  bool fits_in_stack = aligned_len <= BUFFER_STACK_SIZE;
+  bool fits_in_stack = aligned_len <= BUFFER_STACK_BYTES;
 
-  uint8_t copy[BUFFER_STACK_SIZE];
+  uint8_t copy[BUFFER_STACK_BYTES];
   uint8_t* bufTemp = fits_in_stack ? copy : malloc(aligned_len);
   if (overflow_len > 0) {
     memset(bufTemp + len, 0, overflow_len);
@@ -149,11 +150,11 @@ napi_value fromBigInt (napi_env env, napi_callback_info info) {
   if (word_count > word_width) {
       word_count = word_width;
   }
-  size_t word_width_bytes = (word_count << 3);
-  bool fits_in_stack = word_width_bytes <= BUFFER_STACK_SIZE;
+  size_t buffer_size = byte_width + overflow_len;
+  bool fits_in_stack = buffer_size <= BUFFER_STACK_BYTES;
 
   uint64_t* conv_buffer = (uint64_t*) raw_buffer;
-  uint64_t stack_buffer[BUFFER_STACK_SIZE];
+  uint64_t stack_buffer[BUFFER_STACK_WORDS];
   if (not_64_aligned) {
       conv_buffer = fits_in_stack ? stack_buffer : malloc(byte_width + overflow_len);
   }

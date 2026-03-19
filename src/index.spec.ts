@@ -286,3 +286,81 @@ describe('Try bigint conversion (big endian)', () => {
         ]));
   });
 });
+
+describe('Buffer overflow regression (SNYK-JS-BIGINTBUFFER-3364597)', () => {
+  // Small BigInt into a non-aligned buffer wider than the native stack buffer.
+  // Before the fix, fromBigInt compared word_count bytes (small) against the
+  // stack limit, then memset the full byte_width+overflow into the undersized
+  // stack buffer, causing a stack buffer overflow.
+
+  it('toBufferBE with small bigint and non-aligned width > 32 bytes', () => {
+    const buf = toBufferBE(BigInt(`0xdeadbeef`), 33);
+    buf.length.should.equal(33);
+    // First 29 bytes should be zero-padded, last 4 bytes hold the value
+    for (let i = 0; i < 29; i++) {
+      buf[i].should.equal(0, `byte ${i} should be 0`);
+    }
+    buf[29].should.equal(0xde);
+    buf[30].should.equal(0xad);
+    buf[31].should.equal(0xbe);
+    buf[32].should.equal(0xef);
+  });
+
+  it('toBufferLE with small bigint and non-aligned width > 32 bytes', () => {
+    const buf = toBufferLE(BigInt(`0xdeadbeef`), 33);
+    buf.length.should.equal(33);
+    buf[0].should.equal(0xef);
+    buf[1].should.equal(0xbe);
+    buf[2].should.equal(0xad);
+    buf[3].should.equal(0xde);
+    for (let i = 4; i < 33; i++) {
+      buf[i].should.equal(0, `byte ${i} should be 0`);
+    }
+  });
+
+  it('toBufferBE with small bigint and large non-aligned width (257 bytes)', () => {
+    const buf = toBufferBE(BigInt(`0x1`), 257);
+    buf.length.should.equal(257);
+    for (let i = 0; i < 256; i++) {
+      buf[i].should.equal(0, `byte ${i} should be 0`);
+    }
+    buf[256].should.equal(1);
+  });
+
+  it('toBufferLE with small bigint and large non-aligned width (257 bytes)', () => {
+    const buf = toBufferLE(BigInt(`0x1`), 257);
+    buf.length.should.equal(257);
+    buf[0].should.equal(1);
+    for (let i = 1; i < 257; i++) {
+      buf[i].should.equal(0, `byte ${i} should be 0`);
+    }
+  });
+
+  it('roundtrip BE with non-aligned width (33 bytes)', () => {
+    const val = BigInt(`0xbadc0ffee0ddf00ddeadbeef`);
+    const buf = toBufferBE(val, 33);
+    const result = toBigIntBE(buf);
+    assertEquals(result, val);
+  });
+
+  it('roundtrip LE with non-aligned width (33 bytes)', () => {
+    const val = BigInt(`0xbadc0ffee0ddf00ddeadbeef`);
+    const buf = toBufferLE(val, 33);
+    const result = toBigIntLE(buf);
+    assertEquals(result, val);
+  });
+
+  it('roundtrip BE with large non-aligned width (257 bytes)', () => {
+    const val = BigInt(`0xbadc0ffee0ddf00ddeadbeefbadc0ffee0ddf00ddeadbeef`);
+    const buf = toBufferBE(val, 257);
+    const result = toBigIntBE(buf);
+    assertEquals(result, val);
+  });
+
+  it('roundtrip LE with large non-aligned width (257 bytes)', () => {
+    const val = BigInt(`0xbadc0ffee0ddf00ddeadbeefbadc0ffee0ddf00ddeadbeef`);
+    const buf = toBufferLE(val, 257);
+    const result = toBigIntLE(buf);
+    assertEquals(result, val);
+  });
+});
