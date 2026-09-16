@@ -1,4 +1,11 @@
 # 💪🔢 bigint-buffer: Buffer Utilities for TC39 BigInt Proposal 
+
+> **hivello fork notice:** this fork patches [CVE-2025-3194 / GHSA-3gc7-fjrx-p6mg](https://github.com/advisories/GHSA-3gc7-fjrx-p6mg),
+> a buffer-overflow in the native `toBigInt()` binding used by `toBigIntLE`/`toBigIntBE`.
+> Upstream (`no2chem/bigint-buffer`) has not published a fix since `1.1.5` (2019), so
+> `toBigIntLE`/`toBigIntBE` in this fork always use the package's own safe pure-JS path
+> instead of the native addon. `toBufferLE`/`toBufferBE` are unaffected and unchanged.
+> See `src/index.ts` for the patch. Published here as `1.1.6`.
 [![NPM Package](https://img.shields.io/npm/v/bigint-buffer.svg?style=flat-square)](https://www.npmjs.org/package/bigint-buffer)
 [![Build Status](https://img.shields.io/travis/com/no2chem/bigint-buffer.svg?branch=master&style=flat-square)](https://travis-ci.com/no2chem/bigint-buffer)
 [![Coverage Status](https://img.shields.io/coveralls/no2chem/bigint-buffer.svg?style=flat-square)](https://coveralls.io/r/no2chem/bigint-buffer)
