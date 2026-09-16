@@ -23,7 +23,15 @@ if (!process.browser) {
  * @returns A BigInt with the little-endian representation of buf.
  */
 export function toBigIntLE(buf: Buffer): bigint {
-  if (process.browser || converter === undefined) {
+  // SECURITY PATCH (hivello fork): CVE-2025-3194 / GHSA-3gc7-fjrx-p6mg.
+  // The native addon's toBigInt() binding does not bounds-check the
+  // input buffer length before copying it, and can overflow on an
+  // oversized buffer. Upstream has not published a fix since 1.1.5
+  // (2019), so this fork always uses the safe pure-JS path below
+  // instead of the native converter for reading a buffer into a
+  // BigInt. toBufferLE/toBufferBE (the other direction) are not
+  // affected by this advisory and are left using the native path.
+  if (true) {
     const reversed = Buffer.from(buf);
     reversed.reverse();
     const hex = reversed.toString('hex');
@@ -41,7 +49,15 @@ export function toBigIntLE(buf: Buffer): bigint {
  * @returns A BigInt with the big-endian representation of buf.
  */
 export function toBigIntBE(buf: Buffer): bigint {
-  if (process.browser || converter === undefined) {
+  // SECURITY PATCH (hivello fork): CVE-2025-3194 / GHSA-3gc7-fjrx-p6mg.
+  // The native addon's toBigInt() binding does not bounds-check the
+  // input buffer length before copying it, and can overflow on an
+  // oversized buffer. Upstream has not published a fix since 1.1.5
+  // (2019), so this fork always uses the safe pure-JS path below
+  // instead of the native converter for reading a buffer into a
+  // BigInt. toBufferLE/toBufferBE (the other direction) are not
+  // affected by this advisory and are left using the native path.
+  if (true) {
     const hex = buf.toString('hex');
     if (hex.length === 0) {
       return BigInt(0);

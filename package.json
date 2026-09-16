@@ -1,7 +1,7 @@
 {
   "name": "bigint-buffer",
-  "version": "1.1.5",
-  "description": "bigint to buffer conversion with native support",
+  "version": "1.1.6",
+  "description": "bigint to buffer conversion with native support (hivello fork: patches CVE-2025-3194 / GHSA-3gc7-fjrx-p6mg, see README)",
   "main": "dist/node.js",
   "browser": {
     "./dist/node.js": "./dist/browser.js"
@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/no2chem/bigint-buffer.git"
+    "url": "https://github.com/hivello/bigint-buffer.git"
   },
   "bugs": {
     "url": "https://github.com/no2chem/bigint-buffer/issues"
